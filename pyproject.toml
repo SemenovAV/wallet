@@ -6,7 +6,8 @@ tag_format = "v$major.$minor.$patch$prerelease"
 [tool.coverage.run]
 branch = true
 source = ["./src"]
-omit = ["*/manage.py", "*/tests/*"]
+omit = ["*/manage.py", "*/tests/*, */migrations/*"]
+
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
