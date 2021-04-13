@@ -1,0 +1,95 @@
+name: CI
+on:
+  push:
+    branches-ignore: [ master ]
+  pull_request:
+    branches-ignore: [ master ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: secret.SECRET_KEY
+      PYTHONPATH: './src/'
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Cach
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
+          restore-keys: ${{ runner.os }}-pipenv-
+          
+      - name: Set up Python 3.8.6
+        uses: actions/setup-python@v2
+        
+        with:
+          python-version: 3.8.6
+          
+      - name: Install pipenv
+        run: |
+          sudo apt-get install libpq-dev -y
+          python -m pip install --upgrade pip
+          pip install pipenv
+          
+      - name: Install dependencies
+        run: pipenv install --dev
+        
+      - name: Install precommit hook
+        run: pipenv run init
+            
+      - name: Migrate DB
+        run: pipenv run manage migrate
+
+      - name: Lint code
+        run: pipenv run lint
+
+      - name: Test code with pytest
+        run: pipenv run test
+  analyze:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python' ]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+  push_master:
+    needs: [ test, analyze ]
+    
+    runs-on: ubuntu-latest
+    name: Push
+    steps:
+    - name: Configure
+      run: |
+        git git config --global user.email homutovan@live.com
+        git config --global user.name "Git Actions"
+    - name: Start
+      run: |
+        git checkout master
+        git merge dev
+  bump-version:
+    needs: [ test, analyze ]
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    name: "Bump version and create changelog with commitizen"
+    steps:
+    - name: Check out
+      uses: actions/checkout@v2
+      with:
+        token: '${{ secrets.GITHUB_TOKEN}}'
+        fetch-depth: 0
+    - name: Create bump and changelog
+      uses: commitizen-tools/commitizen-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
