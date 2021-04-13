@@ -57,5 +57,5 @@ jobs:
         run: pipenv run pre-commit run flake8 -a
 
       - name: Test with pytest
-        run: pipenv run coverage run --source='./src' -m pytest --suppress-no-test-exit-code
+        run: pipenv run coverage run --source='./src' -m pytest --suppress-no-test-exit-code --disable-warnings
 
