@@ -1,3 +1,4 @@
+[![CI](https://github.com/SemenovAV/wallet/actions/workflows/CI.yml/badge.svg)](https://github.com/SemenovAV/wallet/actions/workflows/CI.yml)
 # Сервер Джанго
 
 ## Инструкция по установке:
