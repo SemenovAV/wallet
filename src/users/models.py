@@ -11,7 +11,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     An abstract base class implementing a fully featured User model with
     admin-compliant permissions.
     """
-    id = models.BigAutoField(primary_key=True)
     email = models.EmailField(_('email address'), max_length=40, unique=True)
     first_name = models.CharField(_('first name'), max_length=30)
     last_name = models.CharField(_('last name'), max_length=30)
