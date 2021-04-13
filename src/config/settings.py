@@ -36,7 +36,6 @@ CORS_ALLOW_CREDENTIALS = False
 
 INSTALLED_APPS = [
     "corsheaders",
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
