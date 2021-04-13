@@ -1,17 +1,17 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: "v2.5.0"
+  rev: 6e2418c5521b7d606e72914dced3253f9ace1205  # frozen: v3.4.0
   hooks:
     - id: check-merge-conflict
     - id: debug-statements
     - id: detect-private-key
 - repo: https://github.com/commitizen-tools/commitizen
-  rev: master
+  rev: 2b64adf53f3ddcf04258eaa67b6270348a46cd0a  # frozen: v2.17.2
   hooks:
     - id: commitizen
       stages: [commit-msg]
 - repo: https://gitlab.com/pycqa/flake8
-  rev: master  # pick a git hash / tag to point to
+  rev: 56370aae451722f9d77a5ccd6fb6e231a4a8e651  # frozen: 3.9.0
   hooks:
     - id: flake8
       name: flake8
